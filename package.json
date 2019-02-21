@@ -1,0 +1,24 @@
+{
+  "name": "telelog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ongspxm/telelog.git"
+  },
+  "author": "ongspxm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ongspxm/telelog/issues"
+  },
+  "homepage": "https://github.com/ongspxm/telelog#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "request": "^2.88.0",
+    "sqlite3": "^4.0.6"
+  }
+}
