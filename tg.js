@@ -2,22 +2,26 @@ const request = require('request');
 
 const getLink = endpoint => `https://api.telegram.org/bot${process.env.BOT}/${endpoint}`;
 
+function xhr(uri, qs) {
+  return new Promise((resolve, reject) => {
+    request({
+      uri, qs
+    }, (err, data, body) => err
+      ? reject(err)
+      : resolve(body));
+  });
+}
+
 function send(chatId, msg) {
-  return request({
-    uri: getLink('sendMessage'),
-    qs: {
-      parse_mode: 'Markdown',
-      chat_id: chatId,
-      text: msg,
-    },
+  return xhr(getLink('sendMessage'), {
+    parse_mode: 'Markdown',
+    chat_id: chatId,
+    text: msg,
   });
 }
 
 function setup(url) {
-  return request({
-    uri: getLink('setWebhook'),
-    qs: { url },
-  });
+  return xhr(getLink('setWebhook'), { url });
 }
 
 module.exports = {
