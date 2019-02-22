@@ -8,19 +8,41 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/msg', (req, res) => {
+function sendMsg(body) {
   // u: username, t: text
-  const q = req.query;
-  dbase.getChatId(q.u)
-    .then(chatId => tg.send(chatId, q.t))
+  return dbase.getChatId(body.u)
+    .then(chatId => tg.send(chatId, body.t))
+}
+
+app.get('/msg', (req, res) => {
+  sendMsg(req.query)
     .then(r => res.send(r));
-  console.log(req.query);
+});
+
+app.post('/msg', (req, res) => {
+  sendMsg(req.body)
+    .then(r => res.send(r));
+});
+
+app.post('/update', (req, res) => {
+  const msg = req.body.message;
+
+  const text = msg.text;
+  const chatId = msg.chat.id;
+
+  return (text.startsWith('/')
+    ? dbase.getUsername(chatId)
+      .then(cid => tg.send(chatId, cid ? `*curr*: ${cid}` : 'not set'))
+    : dbase.updateUsername(chatId, text)
+      .then(
+        () => tg.send(chatId, `*updated username:* ${text}`),
+        err => tg.send(chatId, `*err:* ${err.message}`)))
+  .then(() => res.send());
 });
 
 app.get('/hook', (req, res) => {
-  tg.setup(`${req.headers.host}/update`)
-    .then(console.log);
-  res.send();
+  const url = `${req.headers.host}/update`;
+  tg.setup(url).then(() => res.send(url));
 });
 
 const port = process.env.PORT || 3000;

@@ -33,8 +33,8 @@ function getChatId(username) {
   .then(row => row ? row.chat_id : null);
 }
 
-function getUsername(username) {
-  return select('where chat_id=?', [username])
+function getUsername(chatId) {
+  return select('where chat_id=?', [chatId])
   .then(row => row ? row.username : null);
 }
 
